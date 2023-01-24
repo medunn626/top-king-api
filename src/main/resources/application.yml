@@ -1,0 +1,29 @@
+info:
+  application:
+    name: top-king
+    author: Mike Dunn
+    version: '@project.version@'
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  info:
+    env:
+      enabled: true
+
+spring:
+  datasource:
+    name: top-king
+    driver-class:name: com.mysql.cj.jdbc.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  profiles:
+    active: dev
+
