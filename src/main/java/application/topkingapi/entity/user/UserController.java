@@ -24,8 +24,8 @@ public class UserController {
 
     @GetMapping("/login")
     public ResponseEntity<User> login(@RequestParam String email,
-                                         @RequestParam String password,
-                                         @RequestParam String productTier) throws Exception {
+                                      @RequestParam String password,
+                                      @RequestParam String productTier) throws Exception {
         var user = userService.getAndReturnUser(email, password, productTier);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }

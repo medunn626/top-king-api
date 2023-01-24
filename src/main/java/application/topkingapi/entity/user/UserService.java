@@ -6,12 +6,14 @@ import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
 @Service
 public class UserService {
     private final UserRepo userRepo;
+    public final static List<String> ADMIN_EMAILS = List.of("kingtko1992@gmail.com");
 
     @Autowired
     public UserService(UserRepo userRepo) {
@@ -22,7 +24,9 @@ public class UserService {
         var newUser = new User();
         newUser.setEmail(email);
         newUser.setPassword(password);
-        if (productTier == null) {
+        if (ADMIN_EMAILS.contains(email)) {
+            newUser.setProductTier("admin");
+        } else if (productTier == null) {
             newUser.setProductTier("");
         } else {
             newUser.setProductTier(productTier);
@@ -40,6 +44,7 @@ public class UserService {
     }
 
     public User getAndReturnUser(String email, String password, String productTier) throws Exception {
+
         Predicate<User> matchesEmail = user -> email.equals(user.getEmail());
         Predicate<User> matchesPassword = user -> password.equals(user.getPassword());
         var savedUser = userRepo.findAll().stream()

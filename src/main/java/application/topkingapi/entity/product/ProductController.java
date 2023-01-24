@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static application.topkingapi.entity.user.UserService.ADMIN_EMAILS;
+
 @RestController
 @RequestMapping("/plans")
 public class ProductController {
@@ -20,7 +22,9 @@ public class ProductController {
                                            @PathVariable String productTier) throws Exception {
         var id = Long.parseLong(userId);
         var currentUser = userService.getUserById(id);
-        currentUser.setProductTier(productTier);
+        if (!ADMIN_EMAILS.contains(currentUser.getEmail())) {
+            currentUser.setProductTier(productTier);
+        }
         var updatedUser = userService.updateUser(currentUser);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
