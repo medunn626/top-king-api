@@ -22,7 +22,11 @@ public class UserService {
         var newUser = new User();
         newUser.setEmail(email);
         newUser.setPassword(password);
-        newUser.setProductTier(productTier);
+        if (productTier == null) {
+            newUser.setProductTier("");
+        } else {
+            newUser.setProductTier(productTier);
+        }
         var savedUser = userRepo.save(newUser);
 
         if (savedUser == null) {
