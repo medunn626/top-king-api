@@ -26,3 +26,7 @@ spring:
       ddl-auto: update
   profiles:
     active: dev
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
