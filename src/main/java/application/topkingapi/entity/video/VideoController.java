@@ -10,12 +10,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("videos")
 public class VideoController {
     private final VideoService videoService;
+    private static Logger LOGGER = Logger.getLogger(VideoController.class.getName());
 
     public VideoController(VideoService videoService) {
         this.videoService = videoService;
@@ -30,10 +32,14 @@ public class VideoController {
     @PostMapping("/upload/tiers/{tiers}")
     public void uploadVideo(@RequestBody MultipartFile file,
                             @PathVariable String tiers) throws IOException {
-        List<String> tiersToSend = Arrays.stream(tiers.split(""))
-                .collect(Collectors.toCollection(ArrayList::new));
-        tiersToSend.add("admin");
-        videoService.uploadVideo(file, tiersToSend);
+        try {
+            List<String> tiersToSend = Arrays.stream(tiers.split(""))
+                    .collect(Collectors.toCollection(ArrayList::new));
+            tiersToSend.add("admin");
+            videoService.uploadVideo(file, tiersToSend);
+        } catch (IOException exception) {
+            LOGGER.info("Failed to upload vid " + exception.getMessage());
+        }
     }
 
     /**
