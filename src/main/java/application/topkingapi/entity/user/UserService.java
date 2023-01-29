@@ -20,18 +20,15 @@ public class UserService {
         this.userRepo = userRepo;
     }
 
-    public User addAndReturnUser(String email, String password, String productTier) throws Exception {
-        var newUser = new User();
-        newUser.setEmail(email);
-        newUser.setPassword(password);
-        if (ADMIN_EMAILS.contains(email)) {
-            newUser.setProductTier("admin");
-        } else if (productTier == null) {
-            newUser.setProductTier("");
+    public User addAndReturnUser(User userToCreate) throws Exception {
+        if (ADMIN_EMAILS.contains(userToCreate.getEmail())) {
+            userToCreate.setProductTier("admin");
+        } else if (userToCreate.getProductTier() == null) {
+            userToCreate.setProductTier("");
         } else {
-            newUser.setProductTier(productTier);
+            userToCreate.setProductTier(userToCreate.getProductTier());
         }
-        var savedUser = userRepo.save(newUser);
+        var savedUser = userRepo.save(userToCreate);
 
         if (savedUser == null) {
             throw new Exception("Unable to create user");
@@ -44,7 +41,6 @@ public class UserService {
     }
 
     public User getAndReturnUser(String email, String password, String productTier) throws Exception {
-
         Predicate<User> matchesEmail = user -> email.equals(user.getEmail());
         Predicate<User> matchesPassword = user -> password.equals(user.getPassword());
         var savedUser = userRepo.findAll().stream()

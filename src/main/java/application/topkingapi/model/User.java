@@ -12,14 +12,10 @@ public class User implements Serializable {
     private Long id;
     private String email;
     private String password;
+    private String phoneNumber;
     private String productTier;
 
     public User(){}
-
-    public User(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
 
     public Long getId() {
         return this.id;
@@ -45,6 +41,13 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    public String getPhoneNumber() {
+        return this.phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
     public String getProductTier() {
         return this.productTier;
     }

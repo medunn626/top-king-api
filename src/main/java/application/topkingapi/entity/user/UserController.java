@@ -15,10 +15,8 @@ public class UserController {
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<User> signUp(@RequestParam String email,
-                                       @RequestParam String password,
-                                       @RequestParam String productTier) throws Exception {
-        var user = userService.addAndReturnUser(email, password, productTier);
+    public ResponseEntity<User> signUp(@RequestBody User userToCreate) throws Exception {
+        var user = userService.addAndReturnUser(userToCreate);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
