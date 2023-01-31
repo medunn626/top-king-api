@@ -24,6 +24,17 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username:
+    password:
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   profiles:
     active: dev
   servlet:
@@ -33,5 +44,5 @@ spring:
 
 twilio:
   account_sid: ACbe15b475c5f9654a7a50fcf4db1c16cc
-  auth_token: 59f65eee6103ecb050332fdff1bbcfdd
+  auth_token: ${TWILIO_TOKEN}
   trail_number: 18334925940
