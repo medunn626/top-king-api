@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import static application.topkingapi.entity.user.UserService.ADMIN_EMAILS;
 
 @RestController
-@RequestMapping("/plans")
+@RequestMapping("plans")
 public class ProductController {
     private final UserService userService;
 

@@ -37,6 +37,7 @@ public class UserService {
         var userToReturn = new User();
         userToReturn.setProductTier(savedUser.getProductTier());
         userToReturn.setId(savedUser.getId());
+        userToReturn.setPhoneNumber(savedUser.getPhoneNumber());
         return userToReturn;
     }
 
@@ -58,6 +59,7 @@ public class UserService {
         var userToReturn = new User();
         userToReturn.setProductTier(savedUser.getProductTier());
         userToReturn.setId(savedUser.getId());
+        userToReturn.setPhoneNumber(savedUser.getPhoneNumber());
         return userToReturn;
     }
 
