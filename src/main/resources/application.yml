@@ -15,15 +15,13 @@ management:
 
 spring:
   datasource:
-    name: top-king
-    driver-class:name: com.mysql.cj.jdbc.Driver
+    driver-class:
+      name: com.mysql.cj.jdbc.Driver
   jpa:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
     show-sql: true
-    hibernate:
-      ddl-auto: update
   mail:
     host: smtp.gmail.com
     port: 587
@@ -40,3 +38,10 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
+  sql:
+    init:
+      mode: always
+
+twilio:
+  account_sid: ACbe15b475c5f9654a7a50fcf4db1c16cc
+  trail_number: 18334925940
