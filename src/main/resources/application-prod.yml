@@ -3,3 +3,9 @@ spring:
     url: jdbc:mysql://${PROD_DB_HOST}:${PROD_DB_PORT}/${PROD_DB_NAME}
     username: ${PROD_DB_USERNAME}
     password: ${PROD_DB_PASSWORD}
+  mail:
+    password: ${GMAIL_PASSWORD}
+twilio:
+  account_sid: ACbe15b475c5f9654a7a50fcf4db1c16cc
+  auth_token: ${TWILIO_TOKEN}
+  trail_number: 18334925940
