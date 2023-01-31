@@ -44,7 +44,7 @@ public class UserService {
     public User getAndReturnUser(String email, String password, String productTier) throws Exception {
         Predicate<User> matchesEmail = user -> email.equals(user.getEmail());
         Predicate<User> matchesPassword = user -> password.equals(user.getPassword());
-        var savedUser = userRepo.findAll().stream()
+        var savedUser = getAllUsers().stream()
                 .filter(matchesEmail.and(matchesPassword))
                 .findAny()
                 .orElseThrow(() -> new Exception("Unable to find user"));
@@ -67,13 +67,17 @@ public class UserService {
         return userRepo.findById(id).orElseThrow(() -> new Exception("Unable to find user with id"));
     }
 
+    public List<User> getAllUsers() {
+        return userRepo.findAll();
+    }
+
     public User updateUser(User userToUpdate) {
         return userRepo.save(userToUpdate);
     }
 
     public void changePassword(String email, String password) throws Exception {
         Predicate<User> matchesEmail = user -> email.equals(user.getEmail());
-        var userToUpdate = userRepo.findAll().stream()
+        var userToUpdate = getAllUsers().stream()
                 .filter(matchesEmail)
                 .findAny()
                 .orElseThrow(() -> new Exception("Unable to find existing user"));

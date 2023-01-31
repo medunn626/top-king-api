@@ -1,5 +1,6 @@
 package application.topkingapi.twilio;
 
+import com.twilio.exception.ApiException;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.rest.api.v2010.account.MessageCreator;
 import com.twilio.type.PhoneNumber;
@@ -26,7 +27,11 @@ public class TwilioSmsSender implements SmsSender {
         PhoneNumber from = new PhoneNumber(twilioConfiguration.getTrialNumber());
         String message = smsRequest.getMessage();
         MessageCreator creator = Message.creator(to, from, message);
-        creator.create();
+        try {
+            creator.create();
+        } catch (ApiException e) {
+            // Do nothing
+        }
         LOGGER.info("Send sms {}", smsRequest);
     }
 }

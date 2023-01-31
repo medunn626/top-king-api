@@ -7,20 +7,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("videos")
 public class VideoController {
-    private final VideoService videoService;
-    private static Logger LOGGER = Logger.getLogger(VideoController.class.getName());
+    private final VideoOrchestrator videoOrchestrator;
 
-    public VideoController(VideoService videoService) {
-        this.videoService = videoService;
+    public VideoController(VideoOrchestrator videoOrchestrator) {
+        this.videoOrchestrator = videoOrchestrator;
     }
 
     /**
@@ -29,17 +24,11 @@ public class VideoController {
      * @param tiers
      * @throws IOException
      */
-    @PostMapping("/upload/tiers/{tiers}")
+    @PostMapping("/upload/tiers/{tiers}/notify/{method}")
     public void uploadVideo(@RequestBody MultipartFile file,
-                            @PathVariable String tiers) throws IOException {
-        try {
-            List<String> tiersToSend = Arrays.stream(tiers.split(""))
-                    .collect(Collectors.toCollection(ArrayList::new));
-            tiersToSend.add("admin");
-            videoService.uploadVideo(file, tiersToSend);
-        } catch (IOException exception) {
-            LOGGER.info("Failed to upload vid " + exception.getMessage());
-        }
+                            @PathVariable String tiers,
+                            @PathVariable String method) throws IOException {
+        videoOrchestrator.uploadVideoAndNotify(file, tiers, method);
     }
 
     /**
@@ -50,10 +39,7 @@ public class VideoController {
     @PutMapping("update/id/{videoId}/tiers/{tiers}")
     public void updateTiersOnVideo(@PathVariable String videoId,
                                    @PathVariable String tiers) {
-        List<String> tiersToSend = Arrays.stream(tiers.split(""))
-                .collect(Collectors.toCollection(ArrayList::new));
-        tiersToSend.add("admin");
-        videoService.updateTiersOnVideo(Long.valueOf(videoId), tiersToSend);
+        videoOrchestrator.updateTiersOnVideo(videoId, tiers);
     }
 
     /**
@@ -62,12 +48,12 @@ public class VideoController {
      */
     @DeleteMapping("delete/id/{videoId}")
     public void deleteVideo(@PathVariable Long videoId) {
-        videoService.deleteVideo(videoId);
+        videoOrchestrator.deleteVideo(videoId);
     }
 
     @GetMapping("retrieve/{tiers}")
     public ResponseEntity<List<Video>> getVideosForTier(@PathVariable String tiers) {
-        List<Video> videos = videoService.getVideosForTier(tiers);
+        List<Video> videos = videoOrchestrator.getVideosForTier(tiers);
         return new ResponseEntity<>(videos, HttpStatus.OK);
     }
 }
