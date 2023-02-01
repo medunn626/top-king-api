@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import static application.topkingapi.entity.user.UserService.ADMIN_EMAILS;
+import static application.topkingapi.entity.user.UserOrchestrator.ADMIN_EMAILS;
 
 @Component
 public class ProductOrchestrator {

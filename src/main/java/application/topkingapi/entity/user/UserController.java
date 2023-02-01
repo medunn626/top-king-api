@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("")
 public class UserController {
-    private final UserService userService;
+    private final UserOrchestrator userOrchestrator;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public UserController(UserOrchestrator userOrchestrator) {
+        this.userOrchestrator = userOrchestrator;
     }
 
     @PostMapping("/sign-up")
     public ResponseEntity<User> signUp(@RequestBody User userToCreate) throws Exception {
-        var user = userService.addAndReturnUser(userToCreate);
+        var user = userOrchestrator.addAndReturnUser(userToCreate);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -24,13 +24,8 @@ public class UserController {
     public ResponseEntity<User> login(@RequestParam String email,
                                       @RequestParam String password,
                                       @RequestParam String productTier) throws Exception {
-        var user = userService.getAndReturnUser(email, password, productTier);
+        var user = userOrchestrator.getAndReturnUser(email, password, productTier);
         return new ResponseEntity<>(user, HttpStatus.OK);
-    }
-
-    @PutMapping("/change-password")
-    public void changePassword(@RequestParam String email, @RequestParam String password) throws Exception {
-        userService.changePassword(email, password);
     }
 
 }
