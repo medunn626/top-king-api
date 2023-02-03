@@ -33,7 +33,7 @@ public class TwilioConfiguration {
         return trialNumber;
     }
 
-    public void setTrailNumber(String trialNumber) {
+    public void setTrialNumber(String trialNumber) {
         this.trialNumber = trialNumber;
     }
 }

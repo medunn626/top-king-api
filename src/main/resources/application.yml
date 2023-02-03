@@ -44,4 +44,6 @@ spring:
 
 twilio:
   account_sid: ACbe15b475c5f9654a7a50fcf4db1c16cc
-  trail_number: 18334925940
+  auth_token: ${TWILIO_TOKEN}
+  trial_number: 18334925940
+

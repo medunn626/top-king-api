@@ -5,6 +5,3 @@ spring:
     password: ${PROD_DB_PASSWORD}
   mail:
     password: ${GMAIL_PASSWORD}
-
-twilio:
-  auth_token: ${TWILIO_TOKEN}
