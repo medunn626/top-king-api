@@ -1,0 +1,11 @@
+---
+applications:
+  - name: top-king-api
+    instances: 4
+    buildpacks:
+      - java_current
+    memory: 2048 M
+    env:
+      SPRING_PROFILES_ACTIVE: production
+      JAVA_OPTS: -XX:MaxMetaspaceSize=384m -XX:MaxDirectMemorySize=64M
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 17.+}}'
