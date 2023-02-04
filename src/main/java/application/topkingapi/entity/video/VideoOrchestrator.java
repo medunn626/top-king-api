@@ -37,11 +37,11 @@ public class VideoOrchestrator {
         this.twilioService = twilioService;
     }
 
-    public void uploadVideoAndNotify(MultipartFile file, String tiers, String method) throws IOException {
+    public void uploadVideoAndNotify(MultipartFile file, String name, String tiers, String method) throws IOException {
         List<String> tiersToSend = constructTiersToSent(tiers);
-        uploadVideo(file, tiersToSend);
+        uploadVideo(file, name, tiersToSend);
         if (!method.equals("N")) {
-            notifyClient(tiersToSend, method, file.getOriginalFilename());
+            notifyClient(tiersToSend, method, name);
         }
     }
 
@@ -69,8 +69,8 @@ public class VideoOrchestrator {
         return tiersToSend;
     }
 
-    private void uploadVideo(MultipartFile file, List<String> tiersToSend) throws IOException {
-        videoService.uploadVideo(file, tiersToSend);
+    private void uploadVideo(MultipartFile file, String name, List<String> tiersToSend) throws IOException {
+        videoService.uploadVideo(file, name, tiersToSend);
     }
 
     private void notifyClient(List<String> tiersToSend, String method, String videoName) {
@@ -83,7 +83,7 @@ public class VideoOrchestrator {
                     .filter(StringUtils::isNotEmpty)
                     .toList();
             for (var number : phoneNumbers) {
-                var request = new SmsRequest(number, "New video! " + videoName + " is live now.");
+                var request = new SmsRequest(number, "New video! " + videoName + " is live now. Go check it out: https://medunn626.github.io/top-king/content");
                 twilioService.sendSms(request);
             }
         }
@@ -96,7 +96,7 @@ public class VideoOrchestrator {
                 emailSenderService.sendSimpleEmail(
                         email,
                         "New Video Alert!",
-                        videoName + " is live now. Go check it out."
+                        videoName + " is live now. Go check it out: https://medunn626.github.io/top-king/content"
                 );
             }
         }

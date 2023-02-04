@@ -24,11 +24,12 @@ public class VideoController {
      * @param tiers
      * @throws IOException
      */
-    @PostMapping("/upload/tiers/{tiers}/notify/{method}")
+    @PostMapping("/upload/tiers/{tiers}/name/{name}/notify/{method}")
     public void uploadVideo(@RequestBody MultipartFile file,
                             @PathVariable String tiers,
+                            @PathVariable String name,
                             @PathVariable String method) throws IOException {
-        videoOrchestrator.uploadVideoAndNotify(file, tiers, method);
+        videoOrchestrator.uploadVideoAndNotify(file, name, tiers, method);
     }
 
     /**

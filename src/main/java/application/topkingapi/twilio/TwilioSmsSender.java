@@ -30,7 +30,7 @@ public class TwilioSmsSender implements SmsSender {
         try {
             creator.create();
         } catch (ApiException e) {
-            // Do nothing
+            LOGGER.info(e.getMessage());
         }
         LOGGER.info("Send sms {}", smsRequest);
     }

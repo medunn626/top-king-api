@@ -26,13 +26,12 @@ public class VideoService {
      * @return
      * @throws IOException
      */
-    public Video uploadVideo(MultipartFile file, List<String> tiers) throws IOException {
-        var docName = file.getOriginalFilename();
+    public Video uploadVideo(MultipartFile file, String name, List<String> tiers) throws IOException {
         var docType = file.getContentType();
         var data = file.getBytes();
         var tiersToAdd = new ArrayList<>(tiers);
         tiersToAdd.add("admin");
-        Video videoToSave = new Video(docName, docType, data, tiers);
+        Video videoToSave = new Video(name, docType, data, tiers);
 
         return videoRepo.save(videoToSave);
     }
