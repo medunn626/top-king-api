@@ -53,6 +53,17 @@ public class VideoService {
     /**
      * ADMIN ONLY METHOD
      * @param videoId
+     * @param updatedName
+     */
+    public void updateVideoName(Long videoId, String updatedName) {
+        var existingVideo = videoRepo.getReferenceById(videoId);
+        existingVideo.setDocName(updatedName);
+        videoRepo.save(existingVideo);
+    }
+
+    /**
+     * ADMIN ONLY METHOD
+     * @param videoId
      */
     public void deleteVideo(Long videoId) {
         videoRepo.deleteById(videoId);

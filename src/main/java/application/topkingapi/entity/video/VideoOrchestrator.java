@@ -50,6 +50,10 @@ public class VideoOrchestrator {
         videoService.updateTiersOnVideo(Long.valueOf(videoId), tiersToSend);
     }
 
+    public void updateVideoName(String videoId, String name) {
+        videoService.updateVideoName(Long.valueOf(videoId), name);
+    }
+
     public void deleteVideo(Long videoId) {
         videoService.deleteVideo(videoId);
     }

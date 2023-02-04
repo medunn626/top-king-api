@@ -45,6 +45,17 @@ public class VideoController {
     /**
      * ADMIN ONLY METHOD
      * @param videoId
+     * @param name
+     */
+    @PutMapping("update/id/{videoId}/name/{name}")
+    public void updateVideoName(@PathVariable String videoId,
+                                @PathVariable String name) {
+        videoOrchestrator.updateVideoName(videoId, name);
+    }
+
+    /**
+     * ADMIN ONLY METHOD
+     * @param videoId
      */
     @DeleteMapping("delete/id/{videoId}")
     public void deleteVideo(@PathVariable Long videoId) {
