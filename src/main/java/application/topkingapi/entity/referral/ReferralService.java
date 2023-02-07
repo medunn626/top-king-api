@@ -16,9 +16,14 @@ public class ReferralService {
         this.referralRepo = referralRepo;
     }
 
-    public void createReferral(String referralEmail, User affiliate) {
+    public void createReferral(String referralEmail,
+                               String paymentMethod,
+                               String paymentHandle,
+                               User affiliate) {
         Referral referralToCreate = new Referral();
         referralToCreate.setEmail(referralEmail);
+        referralToCreate.setPaymentMethod(paymentMethod);
+        referralToCreate.setPaymentHandle(paymentHandle);
         referralToCreate.setAffiliateId(affiliate.getId());
         referralRepo.save(referralToCreate);
     }

@@ -11,6 +11,8 @@ public class Referral implements Serializable {
     @Column(nullable = false, updatable = false)
     private Long id;
     private String email;
+    private String paymentMethod;
+    private String paymentHandle;
     private Long affiliateId;
 
     public Referral(){}
@@ -29,6 +31,22 @@ public class Referral implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPaymentMethod() {
+        return this.paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public String getPaymentHandle() {
+        return this.paymentHandle;
+    }
+
+    public void setPaymentHandle(String paymentHandle) {
+        this.paymentHandle = paymentHandle;
     }
 
     public Long getAffiliateId() {

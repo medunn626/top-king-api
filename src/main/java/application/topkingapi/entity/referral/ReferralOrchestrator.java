@@ -20,7 +20,7 @@ public class ReferralOrchestrator {
         this.emailSenderService = emailSenderService;
     }
 
-    public void processReferral(String clientName, String referralEmail, Long clientId) throws Exception {
+    public void processReferral(String referralEmail, String paymentMethod, String paymentHandle, Long clientId) throws Exception {
         var affiliate = userService.getUserById(clientId);
         if (isDuplicate(referralEmail)) {
             // Send email to client saying they don't qualify
@@ -30,10 +30,10 @@ public class ReferralOrchestrator {
                     "therefore you do not qualify for commission for this recommendation";
             emailSenderService.sendSimpleEmail(clientEmail, subject, body);
         } else {
-            referralService.createReferral(referralEmail, affiliate);
+            referralService.createReferral(referralEmail, paymentMethod, paymentHandle, affiliate);
             // Email the referral
-            var subject = clientName + " recommends you join TopKing!";
-            var body = "What's up! " + clientName +
+            var subject = affiliate.getName() + " recommends you join TopKing!";
+            var body = "What's up! " + affiliate.getName() +
                     " recommends you sign up for fitness training with the Top King!" +
                     " Click here to join and let's get started: https://medunn626.github.io/top-king";
             emailSenderService.sendSimpleEmail(referralEmail, subject, body);

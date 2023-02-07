@@ -12,6 +12,7 @@ public class User implements Serializable {
     private Long id;
     private String email;
     private String password;
+    private String name;
     private String phoneNumber;
     private String productTier;
 
@@ -39,6 +40,13 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPhoneNumber() {

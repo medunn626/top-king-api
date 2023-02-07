@@ -11,12 +11,13 @@ public class ReferralController {
         this.referralOrchestrator = referralOrchestrator;
     }
 
-    @PostMapping("/client/{clientName}/{clientId}/email/{referralEmail}")
+    @PostMapping("/client/{clientId}/payment/{paymentMethod}/{paymentHandle}/email/{referralEmail}")
     public void processReferral(
-            @PathVariable String clientName,
             @PathVariable Long clientId,
+            @PathVariable String paymentMethod,
+            @PathVariable String paymentHandle,
             @PathVariable String referralEmail) throws Exception {
-        referralOrchestrator.processReferral(clientName, referralEmail, clientId);
+        referralOrchestrator.processReferral(referralEmail, paymentMethod, paymentHandle, clientId);
     }
 
 }

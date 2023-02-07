@@ -47,24 +47,28 @@ public class UserOrchestrator {
         var userToReturn = new User();
         userToReturn.setProductTier(savedUser.getProductTier());
         userToReturn.setId(savedUser.getId());
+        userToReturn.setName(savedUser.getName());
         userToReturn.setPhoneNumber(savedUser.getPhoneNumber());
         return userToReturn;
     }
 
     private void syncWithReferral(User savedUser) throws Exception {
-        var affiliateId = referralService.getReferrals()
+        Referral referrer = referralService.getReferrals()
                 .stream()
                 .filter(ref -> savedUser.getEmail().equals(ref.getEmail()))
                 .findAny()
-                .map(Referral::getAffiliateId);
-        if (affiliateId.isPresent()) {
+                .orElse(null);
+        if (referrer != null) {
             // Send email to TKO saying user needs commission
-            var affiliate = userService.getUserById(affiliateId.get());
-            var affiliateEmail = affiliate.getEmail();
+            User referrerUserInfo = userService.getUserById(referrer.getAffiliateId());
             // TODO: When ready, send to ADMIN_EMAILS instead
             for (var adminEmail : List.of("medunn626@gmail.com")) {
                 var subject = "Referral Account Created!";
-                var body = "Please pay commission to user associated with " + affiliateEmail;
+                var body = "Please pay commission to the referrer. " + System.lineSeparator() +
+                        "Name: " + referrerUserInfo.getName() + System.lineSeparator() +
+                        "Email: " + referrerUserInfo.getEmail() + System.lineSeparator() +
+                        "Payment Method: " + referrer.getPaymentMethod() + System.lineSeparator() +
+                        "Payment Handle: " + referrer.getPaymentHandle();
                 emailSenderService.sendSimpleEmail(adminEmail, subject, body);
             }
         }
@@ -88,6 +92,7 @@ public class UserOrchestrator {
         var userToReturn = new User();
         userToReturn.setProductTier(savedUser.getProductTier());
         userToReturn.setId(savedUser.getId());
+        userToReturn.setName(savedUser.getName());
         userToReturn.setPhoneNumber(savedUser.getPhoneNumber());
         return userToReturn;
     }
