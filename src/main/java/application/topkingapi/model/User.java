@@ -15,6 +15,7 @@ public class User implements Serializable {
     private String name;
     private String phoneNumber;
     private String productTier;
+    private String passwordResetCode;
 
     public User(){}
 
@@ -62,5 +63,13 @@ public class User implements Serializable {
 
     public void setProductTier(String productTier) {
         this.productTier = productTier;
+    }
+
+    public String getPasswordResetCode() {
+        return this.passwordResetCode;
+    }
+
+    public void setPasswordResetCode(String passwordResetCode) {
+        this.passwordResetCode = passwordResetCode;
     }
 }

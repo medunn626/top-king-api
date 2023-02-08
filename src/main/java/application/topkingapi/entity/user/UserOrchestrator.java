@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Predicate;
 
 @Component
@@ -95,5 +96,38 @@ public class UserOrchestrator {
         userToReturn.setName(savedUser.getName());
         userToReturn.setPhoneNumber(savedUser.getPhoneNumber());
         return userToReturn;
+    }
+
+    public void sendPasswordReset(String email) throws Exception {
+        var matchingUser = userService.getAllUsers().stream()
+                .filter(user -> email.equals(user.getEmail()))
+                .findAny()
+                .orElseThrow(() -> new Exception("Unable to find user with email"));
+        var code = UUID.randomUUID().toString();
+        matchingUser.setPasswordResetCode(code);
+        userService.updateUser(matchingUser);
+
+        var subject = "Password Reset";
+        var body = "Please enter this code onto the screen to reset your password:" +
+                System.lineSeparator() +
+                code;
+        emailSenderService.sendSimpleEmail(email, subject, body);
+    }
+
+    public Long confirmCode(String code, String email) {
+        return userService.getAllUsers()
+                .stream()
+                .filter(user -> email.equals(user.getEmail()))
+                .filter(user -> code.equals(user.getPasswordResetCode()))
+                .map(User::getId)
+                .findAny()
+                .orElse(null);
+    }
+
+    public User changePassword(User userToSave) throws Exception {
+        User matchingUser = userService.getUserById(userToSave.getId());
+        matchingUser.setPassword(userToSave.getPassword());
+        matchingUser.setPasswordResetCode(null);
+        return userService.updateUser(matchingUser);
     }
 }

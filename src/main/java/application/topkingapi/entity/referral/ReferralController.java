@@ -1,5 +1,6 @@
 package application.topkingapi.entity.referral;
 
+import application.topkingapi.model.Referral;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -11,13 +12,9 @@ public class ReferralController {
         this.referralOrchestrator = referralOrchestrator;
     }
 
-    @PostMapping("/client/{clientId}/payment/{paymentMethod}/{paymentHandle}/email/{referralEmail}")
-    public void processReferral(
-            @PathVariable Long clientId,
-            @PathVariable String paymentMethod,
-            @PathVariable String paymentHandle,
-            @PathVariable String referralEmail) throws Exception {
-        referralOrchestrator.processReferral(referralEmail, paymentMethod, paymentHandle, clientId);
+    @PostMapping()
+    public void processReferral(@RequestBody Referral referralRequest) throws Exception {
+        referralOrchestrator.processReferral(referralRequest);
     }
 
 }

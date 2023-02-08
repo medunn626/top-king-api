@@ -28,4 +28,20 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    @PostMapping("/password-reset")
+    public void sendPasswordReset(@RequestBody String email) throws Exception {
+        userOrchestrator.sendPasswordReset(email);
+    }
+
+    @GetMapping("/confirm-code/{code}")
+    public Long confirmCode(@PathVariable String code, @RequestParam String email) {
+        return userOrchestrator.confirmCode(code, email);
+    }
+
+    @PutMapping("/change-password")
+    public ResponseEntity<User> changePassword(@RequestBody User userToSave) throws Exception {
+        var user = userOrchestrator.changePassword(userToSave);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
 }

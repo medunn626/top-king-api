@@ -1,7 +1,6 @@
 package application.topkingapi.entity.referral;
 
 import application.topkingapi.model.Referral;
-import application.topkingapi.model.User;
 import application.topkingapi.repo.ReferralRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,15 +15,12 @@ public class ReferralService {
         this.referralRepo = referralRepo;
     }
 
-    public void createReferral(String referralEmail,
-                               String paymentMethod,
-                               String paymentHandle,
-                               User affiliate) {
+    public void createReferral(Referral referral) {
         Referral referralToCreate = new Referral();
-        referralToCreate.setEmail(referralEmail);
-        referralToCreate.setPaymentMethod(paymentMethod);
-        referralToCreate.setPaymentHandle(paymentHandle);
-        referralToCreate.setAffiliateId(affiliate.getId());
+        referralToCreate.setEmail(referral.getEmail());
+        referralToCreate.setPaymentMethod(referral.getPaymentMethod());
+        referralToCreate.setPaymentHandle(referral.getPaymentHandle());
+        referralToCreate.setAffiliateId(referral.getAffiliateId());
         referralRepo.save(referralToCreate);
     }
 
