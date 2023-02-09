@@ -1,4 +1,4 @@
-package application.topkingapi.entity.product;
+package application.topkingapi.entity.user.product;
 
 import application.topkingapi.entity.user.UserService;
 import application.topkingapi.model.User;

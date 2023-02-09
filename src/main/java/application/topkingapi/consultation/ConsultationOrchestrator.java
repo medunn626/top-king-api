@@ -1,4 +1,4 @@
-package application.topkingapi.entity.consultation;
+package application.topkingapi.consultation;
 
 import application.topkingapi.mail.EmailSenderService;
 import application.topkingapi.twilio.SmsRequest;
