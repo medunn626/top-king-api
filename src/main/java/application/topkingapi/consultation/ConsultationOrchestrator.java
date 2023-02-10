@@ -3,6 +3,7 @@ package application.topkingapi.consultation;
 import application.topkingapi.mail.EmailSenderService;
 import application.topkingapi.twilio.SmsRequest;
 import application.topkingapi.twilio.TwilioService;
+import jakarta.mail.MessagingException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -25,7 +26,7 @@ public class ConsultationOrchestrator {
         this.emailSenderService = emailSenderService;
     }
 
-    public void setupConsultingCall(@PathVariable String phoneNumber) {
+    public void setupConsultingCall(@PathVariable String phoneNumber) throws MessagingException {
         sentTextToClient(phoneNumber);
         sendEmailToAdmin(phoneNumber);
     }
@@ -35,7 +36,7 @@ public class ConsultationOrchestrator {
         twilioService.sendSms(request);
     }
 
-    private void sendEmailToAdmin(String phoneNumber) {
+    private void sendEmailToAdmin(String phoneNumber) throws MessagingException {
         var body = "Client at phone number " + phoneNumber + " has requested a consulting call. " +
                 "Please contact the client to coordinate.";
         emailSenderService.sendSimpleEmail(ADMIN_EMAIL_ADDR, ADMIN_EMAIL_SUBJECT, body);

@@ -2,6 +2,7 @@ package application.topkingapi.contact;
 
 import application.topkingapi.mail.EmailSenderService;
 import application.topkingapi.model.Contact;
+import jakarta.mail.MessagingException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,11 +15,10 @@ public class ContactOrchestrator {
         this.emailSenderService = emailSenderService;
     }
 
-    public void sendInquiry(Contact contactRequest) {
-        var subject = "New Inquiry from Training Website";
+    public void sendInquiry(Contact contactRequest) throws MessagingException {
+        var subject = "New Inquiry from Your Training Website!";
         var body = "New inquiry from " + contactRequest.getName() + " at " + contactRequest.getEmail() +
-                System.lineSeparator() +
-                System.lineSeparator() +
+                "<br/><br/>" +
                 contactRequest.getMessage();
         emailSenderService.sendSimpleEmail(ADMIN_EMAIL_ADDR, subject, body);
     }

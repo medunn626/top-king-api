@@ -2,6 +2,7 @@ package application.topkingapi.contact;
 
 import application.topkingapi.consultation.ConsultationOrchestrator;
 import application.topkingapi.model.Contact;
+import jakarta.mail.MessagingException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,7 +15,7 @@ public class ContactController {
     }
 
     @PostMapping("")
-    public void sendInquiry(@RequestBody Contact contactRequest) {
+    public void sendInquiry(@RequestBody Contact contactRequest) throws MessagingException {
         contactOrchestrator.sendInquiry(contactRequest);
     }
 }

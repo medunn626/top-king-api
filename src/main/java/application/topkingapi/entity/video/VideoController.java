@@ -1,6 +1,7 @@
 package application.topkingapi.entity.video;
 
 import application.topkingapi.model.Video;
+import jakarta.mail.MessagingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class VideoController {
     public void uploadVideo(@RequestBody MultipartFile file,
                             @PathVariable String tiers,
                             @PathVariable String name,
-                            @PathVariable String method) throws IOException {
+                            @PathVariable String method) throws IOException, MessagingException {
         videoOrchestrator.uploadVideoAndNotify(file, name, tiers, method);
     }
 

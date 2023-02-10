@@ -16,7 +16,7 @@ public class UserController {
 
     @PostMapping("/sign-up")
     public ResponseEntity<User> signUp(@RequestBody User userToCreate) throws Exception {
-        var user = userOrchestrator.addAndReturnUser(userToCreate);
+        var user = userOrchestrator.addUser(userToCreate);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -36,6 +36,12 @@ public class UserController {
     @GetMapping("/confirm-code/{code}")
     public Long confirmCode(@PathVariable String code, @RequestParam String email) {
         return userOrchestrator.confirmCode(code, email);
+    }
+
+    @GetMapping("/confirm-code/user/{id}/code/{code}")
+    public ResponseEntity<User> confirmCode(@PathVariable String code, @PathVariable Long id) throws Exception {
+        var user = userOrchestrator.confirmCode(code, id);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PutMapping("/change-password")

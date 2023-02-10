@@ -7,6 +7,7 @@ import application.topkingapi.model.Video;
 import application.topkingapi.twilio.SmsRequest;
 import application.topkingapi.twilio.TwilioService;
 import io.micrometer.common.util.StringUtils;
+import jakarta.mail.MessagingException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,7 +38,7 @@ public class VideoOrchestrator {
         this.twilioService = twilioService;
     }
 
-    public void uploadVideoAndNotify(MultipartFile file, String name, String tiers, String method) throws IOException {
+    public void uploadVideoAndNotify(MultipartFile file, String name, String tiers, String method) throws IOException, MessagingException {
         List<String> tiersToSend = constructTiersToSent(tiers);
         uploadVideo(file, name, tiersToSend);
         if (!method.equals("N")) {
@@ -73,7 +74,7 @@ public class VideoOrchestrator {
         videoService.uploadVideo(file, name, tiersToSend);
     }
 
-    private void notifyClient(List<String> tiersToSend, String method, String videoName) {
+    private void notifyClient(List<String> tiersToSend, String method, String videoName) throws MessagingException {
         var nonAdminUsersUnderTier = userService.getAllUsers().stream()
                 .filter(user -> !user.getProductTier().equals(ADMIN) && tiersToSend.contains(user.getProductTier()))
                 .toList();

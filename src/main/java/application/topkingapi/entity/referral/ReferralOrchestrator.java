@@ -32,14 +32,14 @@ public class ReferralOrchestrator {
         if (isExistingUser(allUsers, referralRequest.getEmail())) {
             // Send email to client saying they don't qualify
             var affiliateEmail = affiliate.getEmail();
-            var subject = "Your referral recommendation already has an account with us";
+            var subject = "Top King Training - Your referral recommendation already has an account with us";
             var body = "Apologies. Your referral already has an account with us, " +
                     "therefore you do not qualify for commission for this recommendation";
             emailSenderService.sendSimpleEmail(affiliateEmail, subject, body);
         } else if (isDuplicateReferral(referralRequest.getEmail())) {
             // Send email to client saying they don't qualify
             var affiliateEmail = affiliate.getEmail();
-            var subject = "Your referral recommendation was already referred";
+            var subject = "Top King Training - Your referral recommendation was already referred";
             var body = "Apologies. Your referral has already been referred by another client, " +
                     "therefore you do not qualify for commission for this recommendation";
             emailSenderService.sendSimpleEmail(affiliateEmail, subject, body);

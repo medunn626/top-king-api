@@ -5,7 +5,9 @@ import application.topkingapi.mail.EmailSenderService;
 import application.topkingapi.model.Referral;
 import application.topkingapi.model.User;
 import io.micrometer.common.util.StringUtils;
+import jakarta.mail.MessagingException;
 import org.springframework.stereotype.Component;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +31,7 @@ public class UserOrchestrator {
         this.emailSenderService = emailSenderService;
     }
 
-    public User addAndReturnUser(User userToCreate) throws Exception {
+    public User addUser(User userToCreate) throws Exception {
         if (ADMIN_EMAILS.contains(userToCreate.getEmail())) {
             userToCreate.setProductTier("admin");
         } else if (userToCreate.getProductTier() == null) {
@@ -37,20 +39,29 @@ public class UserOrchestrator {
         } else {
             userToCreate.setProductTier(userToCreate.getProductTier());
         }
+        var verificationCode = constructVerificationCode();
+        userToCreate.setPasswordResetCode(verificationCode);
         var savedUser = userService.createUser(userToCreate);
 
-        if (savedUser == null) {
-            throw new Exception("Error creating user");
-        }
-
+        sendVerificationEmail(savedUser);
         syncWithReferral(savedUser);
 
         var userToReturn = new User();
-        userToReturn.setProductTier(savedUser.getProductTier());
         userToReturn.setId(savedUser.getId());
-        userToReturn.setName(savedUser.getName());
-        userToReturn.setPhoneNumber(savedUser.getPhoneNumber());
         return userToReturn;
+    }
+
+    private String constructVerificationCode() {
+        return RandomStringUtils.randomAlphabetic(10);
+    }
+
+    private void sendVerificationEmail(User savedUser) throws MessagingException {
+        var subject = "Top King Training - Please verify your email!";
+        var body = "Thank you for creating an account with us. Please enter this code onto the screen to verify your email:" +
+                "<br/><br/><strong> " +
+                savedUser.getPasswordResetCode() +
+                "</strong>";
+        emailSenderService.sendSimpleEmail(savedUser.getEmail(), subject, body);
     }
 
     private void syncWithReferral(User savedUser) throws Exception {
@@ -65,10 +76,10 @@ public class UserOrchestrator {
             // TODO: When ready, send to ADMIN_EMAILS instead
             for (var adminEmail : List.of("medunn626@gmail.com")) {
                 var subject = "Referral Account Created!";
-                var body = "Please pay commission to the referrer. " + System.lineSeparator() +
-                        "Name: " + referrerUserInfo.getName() + System.lineSeparator() +
-                        "Email: " + referrerUserInfo.getEmail() + System.lineSeparator() +
-                        "Payment Method: " + referrer.getPaymentMethod() + System.lineSeparator() +
+                var body = "Please pay commission to the referrer. <br/>" +
+                        "Name: " + referrerUserInfo.getName() + "<br/>" +
+                        "Email: " + referrerUserInfo.getEmail() + "<br/>" +
+                        "Payment Method: " + referrer.getPaymentMethod() + "<br/>" +
                         "Payment Handle: " + referrer.getPaymentHandle();
                 emailSenderService.sendSimpleEmail(adminEmail, subject, body);
             }
@@ -91,6 +102,9 @@ public class UserOrchestrator {
         }
 
         var userToReturn = new User();
+        if (StringUtils.isNotEmpty(savedUser.getPasswordResetCode())) {
+            return userToReturn;
+        }
         userToReturn.setProductTier(savedUser.getProductTier());
         userToReturn.setId(savedUser.getId());
         userToReturn.setName(savedUser.getName());
@@ -107,10 +121,11 @@ public class UserOrchestrator {
         matchingUser.setPasswordResetCode(code);
         userService.updateUser(matchingUser);
 
-        var subject = "Password Reset";
+        var subject = "Top King Training - Password Reset";
         var body = "Please enter this code onto the screen to reset your password:" +
-                System.lineSeparator() +
-                code;
+                "<br/><br/><strong>" +
+                code +
+                "</strong>";
         emailSenderService.sendSimpleEmail(email, subject, body);
     }
 
@@ -122,6 +137,21 @@ public class UserOrchestrator {
                 .map(User::getId)
                 .findAny()
                 .orElse(null);
+    }
+
+    public User confirmCode(String code, Long id) throws Exception {
+        var userToReturn = userService.getUserById(id);
+        var confirmed = code.equals(userToReturn.getPasswordResetCode());
+        if (confirmed) {
+            userToReturn.setPasswordResetCode(null);
+            userToReturn.setProductTier(userToReturn.getProductTier());
+            userToReturn.setId(userToReturn.getId());
+            userToReturn.setName(userToReturn.getName());
+            userToReturn.setPhoneNumber(userToReturn.getPhoneNumber());
+            return userService.updateUser(userToReturn);
+        } else {
+            return new User();
+        }
     }
 
     public User changePassword(User userToSave) throws Exception {
