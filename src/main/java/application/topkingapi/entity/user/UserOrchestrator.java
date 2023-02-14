@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
@@ -21,6 +22,11 @@ public class UserOrchestrator {
     private EmailSenderService emailSenderService;
 
     public final static List<String> ADMIN_EMAILS = List.of("kingtko1992@gmail.com");
+    private static final Map<String, String> TIER_LABELS = Map.of(
+            "1", "Beginner",
+            "2", "Intermediate",
+            "3", "Elite"
+    );
 
     public UserOrchestrator(
             UserService userService,
@@ -64,24 +70,29 @@ public class UserOrchestrator {
         emailSenderService.sendSimpleEmail(savedUser.getEmail(), subject, body);
     }
 
-    private void syncWithReferral(User savedUser) throws Exception {
-        Referral referrer = referralService.getReferrals()
-                .stream()
-                .filter(ref -> savedUser.getEmail().equals(ref.getEmail()))
-                .findAny()
-                .orElse(null);
-        if (referrer != null) {
-            // Send email to TKO saying user needs commission
-            User referrerUserInfo = userService.getUserById(referrer.getAffiliateId());
-            // TODO: When ready, send to ADMIN_EMAILS instead
-            for (var adminEmail : List.of("medunn626@gmail.com")) {
-                var subject = "Referral Account Created!";
-                var body = "Please pay commission to the referrer. <br/>" +
-                        "Name: " + referrerUserInfo.getName() + "<br/>" +
-                        "Email: " + referrerUserInfo.getEmail() + "<br/>" +
-                        "Payment Method: " + referrer.getPaymentMethod() + "<br/>" +
-                        "Payment Handle: " + referrer.getPaymentHandle();
-                emailSenderService.sendSimpleEmail(adminEmail, subject, body);
+    public void syncWithReferral(User savedUser) throws Exception {
+        var productTier = savedUser.getProductTier();
+        if (StringUtils.isNotEmpty(productTier)) {
+            Referral referrer = referralService.getReferrals()
+                    .stream()
+                    .filter(ref -> savedUser.getEmail().equals(ref.getEmail()))
+                    .findAny()
+                    .orElse(null);
+            if (referrer != null) {
+                var planLabel = TIER_LABELS.get(productTier);
+                // Send email to TKO saying user needs commission
+                User referrerUserInfo = userService.getUserById(referrer.getAffiliateId());
+                // TODO: When ready, send to ADMIN_EMAILS instead
+                for (var adminEmail : List.of("medunn626@gmail.com")) {
+                    var subject = "Affiliate Account Created!";
+                    var body = "Please pay 20% of the " + planLabel +
+                            " plan price to the referrer below. <br/><br/>" +
+                            "Name: " + referrerUserInfo.getName() + "<br/>" +
+                            "Email: " + referrerUserInfo.getEmail() + "<br/>" +
+                            "Payment Method: " + referrer.getPaymentMethod() + "<br/>" +
+                            "Payment Handle: " + referrer.getPaymentHandle();
+                    emailSenderService.sendSimpleEmail(adminEmail, subject, body);
+                }
             }
         }
     }

@@ -47,9 +47,12 @@ public class ReferralOrchestrator {
             referralService.createReferral(referralRequest);
             // Email the referral
             var subject = affiliate.getName() + " recommends you join TopKing!";
-            var body = "What's up! " + affiliate.getName() +
+            var body = "What's up! <br/><br/>" +
+                    affiliate.getName() +
                     " recommends you sign up for fitness training with the Top King!" +
-                    " Click here to join and let's get started: https://medunn626.github.io/top-king";
+                    " Click <a href='https://medunn626.github.io/top-king'>here</a>" +
+                    " to join and let's get started.";
+
             emailSenderService.sendSimpleEmail(referralRequest.getEmail(), subject, body);
         }
     }

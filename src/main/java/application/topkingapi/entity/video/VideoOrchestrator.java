@@ -97,7 +97,9 @@ public class VideoOrchestrator {
                 emailSenderService.sendSimpleEmail(
                         email,
                         "New Video Alert!",
-                        videoName + " is live now. Go check it out: https://medunn626.github.io/top-king/content"
+                        videoName + " is live now on Top King! <br/><br/>" +
+                                "Click <a href='https://medunn626.github.io/top-king/content'>here</a>" +
+                                " and go check it out."
                 );
             }
         }
