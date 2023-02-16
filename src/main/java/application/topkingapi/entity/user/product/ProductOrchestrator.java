@@ -32,6 +32,7 @@ public class ProductOrchestrator {
         if (addingPlanForFirstTime) {
             userOrchestrator.syncWithReferral(updatedUser);
         }
+        updatedUser.setPassword(null);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 }

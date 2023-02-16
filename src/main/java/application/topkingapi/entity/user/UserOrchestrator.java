@@ -97,7 +97,10 @@ public class UserOrchestrator {
         }
     }
 
-    public User getAndReturnUser(String email, String password, String productTier) throws Exception {
+    public User getAndReturnUser(User userToFind) throws Exception {
+        var email = userToFind.getEmail();
+        var password = userToFind.getPassword();
+        var productTier = userToFind.getProductTier();
         Predicate<User> matchesEmail = user -> email.equals(user.getEmail());
         Predicate<User> matchesPassword = user -> password.equals(user.getPassword());
         var savedUser = userService.getAllUsers().stream()
@@ -109,18 +112,16 @@ public class UserOrchestrator {
                 && Optional.ofNullable(savedUser.getProductTier()).filter(productTier::equals).isEmpty()
                 && Optional.ofNullable(savedUser.getProductTier()).filter("admin"::equals).isEmpty()) {
             savedUser.setProductTier(productTier);
-            userService.updateUser(savedUser);
+            savedUser = userService.updateUser(savedUser);
         }
 
-        var userToReturn = new User();
         if (StringUtils.isNotEmpty(savedUser.getPasswordResetCode())) {
+            var userToReturn = new User();
+            userToReturn.setId(savedUser.getId());
             return userToReturn;
         }
-        userToReturn.setProductTier(savedUser.getProductTier());
-        userToReturn.setId(savedUser.getId());
-        userToReturn.setName(savedUser.getName());
-        userToReturn.setPhoneNumber(savedUser.getPhoneNumber());
-        return userToReturn;
+        savedUser.setPassword(null);
+        return savedUser;
     }
 
     public void sendPasswordReset(String email) throws Exception {
@@ -155,11 +156,9 @@ public class UserOrchestrator {
         var confirmed = code.equals(userToReturn.getPasswordResetCode());
         if (confirmed) {
             userToReturn.setPasswordResetCode(null);
-            userToReturn.setProductTier(userToReturn.getProductTier());
-            userToReturn.setId(userToReturn.getId());
-            userToReturn.setName(userToReturn.getName());
-            userToReturn.setPhoneNumber(userToReturn.getPhoneNumber());
-            return userService.updateUser(userToReturn);
+            var savedUser = userService.updateUser(userToReturn);
+            savedUser.setPassword(null);
+            return savedUser;
         } else {
             return new User();
         }
@@ -169,6 +168,37 @@ public class UserOrchestrator {
         User matchingUser = userService.getUserById(userToSave.getId());
         matchingUser.setPassword(userToSave.getPassword());
         matchingUser.setPasswordResetCode(null);
-        return userService.updateUser(matchingUser);
+        var savedUser = userService.updateUser(matchingUser);
+        savedUser.setPassword(null);
+        return savedUser;
+    }
+
+    public User updateUser(User userToUpdate) throws Exception {
+        User existingUser = userService.getUserById(userToUpdate.getId());
+        var isUpdatingEmail = !userToUpdate.getEmail().equals(existingUser.getEmail());
+        existingUser.setName(userToUpdate.getName());
+        existingUser.setEmail(userToUpdate.getEmail());
+        existingUser.setPhoneNumber(userToUpdate.getPhoneNumber());
+        var updatedUser = userService.updateUser(existingUser);
+
+        if (isUpdatingEmail) {
+            var verificationCode = constructVerificationCode();
+            updatedUser.setPasswordResetCode(verificationCode);
+            var updatedUserWithCode = userService.updateUser(updatedUser);
+            sendVerificationEmail(updatedUserWithCode);
+
+            var userToReturn = new User();
+            userToReturn.setId(updatedUser.getId());
+            return userToReturn;
+        }
+
+        updatedUser.setPassword(null);
+        return updatedUser;
+    }
+
+    public void removePlan(Long id) throws Exception {
+        var userToChange = userService.getUserById(id);
+        userToChange.setProductTier(null);
+        userService.updateUser(userToChange);
     }
 }

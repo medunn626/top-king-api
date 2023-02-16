@@ -20,11 +20,9 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @GetMapping("/login")
-    public ResponseEntity<User> login(@RequestParam String email,
-                                      @RequestParam String password,
-                                      @RequestParam String productTier) throws Exception {
-        var user = userOrchestrator.getAndReturnUser(email, password, productTier);
+    @PutMapping("/login")
+    public ResponseEntity<User> login(@RequestBody User userToFind) throws Exception {
+        var user = userOrchestrator.getAndReturnUser(userToFind);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -48,6 +46,17 @@ public class UserController {
     public ResponseEntity<User> changePassword(@RequestBody User userToSave) throws Exception {
         var user = userOrchestrator.changePassword(userToSave);
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @PutMapping("update-user")
+    public ResponseEntity<User> updateUser(@RequestBody User userToUpdate) throws Exception {
+        var user = userOrchestrator.updateUser(userToUpdate);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @PutMapping("/remove-plan/{id}")
+    public void removePlan(@PathVariable String id) throws Exception {
+        userOrchestrator.removePlan(Long.parseLong(id));
     }
 
 }
