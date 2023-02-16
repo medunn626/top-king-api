@@ -38,6 +38,13 @@ public class UserOrchestrator {
     }
 
     public User addUser(User userToCreate) throws Exception {
+        var emailExists = userService.getAllUsers()
+                .stream()
+                .map(User::getEmail)
+                .anyMatch(userToCreate.getEmail()::equals);
+        if (emailExists) {
+            return new User();
+        }
         if (ADMIN_EMAILS.contains(userToCreate.getEmail())) {
             userToCreate.setProductTier("admin");
         } else if (userToCreate.getProductTier() == null) {
