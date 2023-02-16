@@ -4,9 +4,6 @@ import application.topkingapi.entity.user.UserService;
 import application.topkingapi.mail.EmailSenderService;
 import application.topkingapi.model.User;
 import application.topkingapi.model.Video;
-import application.topkingapi.twilio.SmsRequest;
-import application.topkingapi.twilio.TwilioService;
-import io.micrometer.common.util.StringUtils;
 import jakarta.mail.MessagingException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,20 +19,17 @@ public class VideoOrchestrator {
     private final VideoService videoService;
     private final UserService userService;
     private final EmailSenderService emailSenderService;
-    private final TwilioService twilioService;
 
     private static final String ADMIN = "admin";
 
     public VideoOrchestrator(
             VideoService videoService,
             UserService userService,
-            EmailSenderService emailSenderService,
-            TwilioService twilioService
+            EmailSenderService emailSenderService
     ) {
         this.videoService = videoService;
         this.userService = userService;
         this.emailSenderService = emailSenderService;
-        this.twilioService = twilioService;
     }
 
     public void uploadVideoAndNotify(MultipartFile file, String name, String tiers, String method) throws IOException, MessagingException {
@@ -76,20 +70,11 @@ public class VideoOrchestrator {
 
     private void notifyClient(List<String> tiersToSend, String method, String videoName) throws MessagingException {
         var nonAdminUsersUnderTier = userService.getAllUsers().stream()
-                .filter(user -> !user.getProductTier().equals(ADMIN) && tiersToSend.contains(user.getProductTier()))
+                .filter(user -> null != user.getProductTier()
+                    && !user.getProductTier().equals(ADMIN)
+                    && tiersToSend.contains(user.getProductTier()))
                 .toList();
-        if (method.equals("B") || method.equals("T")) {
-            List<String> phoneNumbers = nonAdminUsersUnderTier.stream()
-                    .map(User::getPhoneNumber)
-                    .filter(StringUtils::isNotEmpty)
-                    .toList();
-            for (var number : phoneNumbers) {
-                var request = new SmsRequest(number, "New video! " + videoName + " is live now. Go check it out: https://medunn626.github.io/top-king/content");
-                twilioService.sendSms(request);
-            }
-        }
-
-        if (method.equals("B") || method.equals("E")) {
+        if (method.equals("E")) {
             List<String> emails = nonAdminUsersUnderTier.stream()
                     .map(User::getEmail)
                     .toList();

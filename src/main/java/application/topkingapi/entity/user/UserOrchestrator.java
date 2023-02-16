@@ -41,7 +41,7 @@ public class UserOrchestrator {
         var users = userService.getAllUsers();
         users.forEach(user -> user.setPassword(null));
         return users.stream()
-                .filter(user -> !user.getProductTier().equals("admin"))
+                .filter(user -> Optional.ofNullable(user.getProductTier()).stream().noneMatch("admin"::equals))
                 .toList();
     }
 

@@ -4,7 +4,7 @@ import jakarta.mail.MessagingException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("consultation")
+@RequestMapping("")
 public class ConsultationController {
     private final ConsultationOrchestrator consultationOrchestrator;
 
@@ -12,8 +12,8 @@ public class ConsultationController {
         this.consultationOrchestrator = consultationOrchestrator;
     }
 
-    @PostMapping("/{phoneNumber}")
-    public void setupConsultingCall(@PathVariable String phoneNumber) throws MessagingException {
-        consultationOrchestrator.setupConsultingCall(phoneNumber);
+    @PostMapping("/consultation")
+    public void setupConsultingCall(@RequestBody String email) throws MessagingException {
+        consultationOrchestrator.setupConsultingCall(email);
     }
 }
