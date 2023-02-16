@@ -37,6 +37,14 @@ public class UserOrchestrator {
         this.emailSenderService = emailSenderService;
     }
 
+    public List<User> getAllUsers() {
+        var users = userService.getAllUsers();
+        users.forEach(user -> user.setPassword(null));
+        return users.stream()
+                .filter(user -> !user.getProductTier().equals("admin"))
+                .toList();
+    }
+
     public User addUser(User userToCreate) throws Exception {
         var emailExists = userService.getAllUsers()
                 .stream()
