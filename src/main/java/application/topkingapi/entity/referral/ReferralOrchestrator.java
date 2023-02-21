@@ -50,7 +50,7 @@ public class ReferralOrchestrator {
             var body = "What's up! <br/><br/>" +
                     affiliate.getName() +
                     " recommends you sign up for fitness training with the Top King!" +
-                    " Click <a href='https://medunn626.github.io/top-king'>here</a>" +
+                    " Click <a href='https://top-kingtraining.com'>here</a>" +
                     " to join and let's get started.";
 
             emailSenderService.sendSimpleEmail(referralRequest.getEmail(), subject, body);

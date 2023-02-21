@@ -83,7 +83,7 @@ public class VideoOrchestrator {
                         email,
                         "New Video Alert!",
                         videoName + " is live now on Top King! <br/><br/>" +
-                                "Click <a href='https://medunn626.github.io/top-king/content'>here</a>" +
+                                "Click <a href='https://topkingtraining.com/content'>here</a>" +
                                 " and go check it out."
                 );
             }

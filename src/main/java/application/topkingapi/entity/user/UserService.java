@@ -21,7 +21,7 @@ public class UserService {
     }
 
     public User getUserById(Long id) throws Exception {
-        return userRepo.findById(id).orElseThrow(() -> new Exception("Unable to find user with id"));
+        return userRepo.findById(id).orElseThrow(() -> new Exception("Unable to find user with id " + id));
     }
 
     public List<User> getAllUsers() {
