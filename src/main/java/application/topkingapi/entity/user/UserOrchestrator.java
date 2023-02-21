@@ -6,6 +6,7 @@ import application.topkingapi.model.Referral;
 import application.topkingapi.model.User;
 import io.micrometer.common.util.StringUtils;
 import jakarta.mail.MessagingException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -21,12 +22,14 @@ public class UserOrchestrator {
     private ReferralService referralService;
     private EmailSenderService emailSenderService;
 
-    public final static List<String> ADMIN_EMAILS = List.of("kingtko1992@gmail.com");
     private static final Map<String, String> TIER_LABELS = Map.of(
             "1", "Beginner",
             "2", "Intermediate",
             "3", "Elite"
     );
+
+    @Value("${spring.mail.username}")
+    private String adminEmailAddr;
 
     public UserOrchestrator(
             UserService userService,
@@ -53,7 +56,7 @@ public class UserOrchestrator {
         if (emailExists) {
             return new User();
         }
-        if (ADMIN_EMAILS.contains(userToCreate.getEmail())) {
+        if (adminEmailAddr.equals(userToCreate.getEmail())) {
             userToCreate.setProductTier("admin");
         } else if (userToCreate.getProductTier() == null) {
             userToCreate.setProductTier("");
@@ -97,17 +100,14 @@ public class UserOrchestrator {
                 var planLabel = TIER_LABELS.get(productTier);
                 // Send email to TKO saying user needs commission
                 User referrerUserInfo = userService.getUserById(referrer.getAffiliateId());
-                // TODO: When ready, send to ADMIN_EMAILS instead
-                for (var adminEmail : List.of("medunn626@gmail.com")) {
-                    var subject = "Affiliate Account Created!";
-                    var body = "Please pay 20% of the " + planLabel +
-                            " plan price to the referrer below. <br/><br/>" +
-                            "Name: " + referrerUserInfo.getName() + "<br/>" +
-                            "Email: " + referrerUserInfo.getEmail() + "<br/>" +
-                            "Payment Method: " + referrer.getPaymentMethod() + "<br/>" +
-                            "Payment Handle: " + referrer.getPaymentHandle();
-                    emailSenderService.sendSimpleEmail(adminEmail, subject, body);
-                }
+                var subject = "Affiliate Account Created!";
+                var body = "Please pay 20% of the " + planLabel +
+                        " plan price to the referrer below. <br/><br/>" +
+                        "Name: " + referrerUserInfo.getName() + "<br/>" +
+                        "Email: " + referrerUserInfo.getEmail() + "<br/>" +
+                        "Payment Method: " + referrer.getPaymentMethod() + "<br/>" +
+                        "Payment Handle: " + referrer.getPaymentHandle();
+                emailSenderService.sendSimpleEmail(adminEmailAddr, subject, body);
             }
         }
     }
