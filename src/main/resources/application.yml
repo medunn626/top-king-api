@@ -37,8 +37,8 @@ spring:
     active: dev
   servlet:
     multipart:
-      max-file-size: 100MB
-      max-request-size: 100MB
+      max-file-size: 3000MB
+      max-request-size: 3000MB
   sql:
     init:
       mode: always
