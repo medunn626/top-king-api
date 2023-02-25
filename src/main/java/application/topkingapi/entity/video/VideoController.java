@@ -19,12 +19,6 @@ public class VideoController {
         this.videoOrchestrator = videoOrchestrator;
     }
 
-    /**
-     * ADMIN ONLY METHOD
-     * @param file
-     * @param tiers
-     * @throws IOException
-     */
     @PostMapping("/upload/tiers/{tiers}/name/{name}/notify/{method}")
     public void uploadVideo(@RequestBody MultipartFile file,
                             @PathVariable String tiers,
@@ -33,40 +27,32 @@ public class VideoController {
         videoOrchestrator.uploadVideoAndNotify(file, name, tiers, method);
     }
 
-    /**
-     * ADMIN ONLY METHOD
-     * @param videoId
-     * @param tiers
-     */
     @PutMapping("update/id/{videoId}/tiers/{tiers}")
     public void updateTiersOnVideo(@PathVariable String videoId,
                                    @PathVariable String tiers) {
         videoOrchestrator.updateTiersOnVideo(videoId, tiers);
     }
 
-    /**
-     * ADMIN ONLY METHOD
-     * @param videoId
-     * @param name
-     */
     @PutMapping("update/id/{videoId}/name/{name}")
     public void updateVideoName(@PathVariable String videoId,
                                 @PathVariable String name) {
         videoOrchestrator.updateVideoName(videoId, name);
     }
 
-    /**
-     * ADMIN ONLY METHOD
-     * @param videoId
-     */
     @DeleteMapping("delete/id/{videoId}")
-    public void deleteVideo(@PathVariable Long videoId) {
+    public void deleteVideo(@PathVariable Long videoId) throws IOException {
         videoOrchestrator.deleteVideo(videoId);
     }
 
     @GetMapping("retrieve/{tiers}")
-    public ResponseEntity<List<Video>> getVideosForTier(@PathVariable String tiers) {
-        List<Video> videos = videoOrchestrator.getVideosForTier(tiers);
+    public ResponseEntity<List<Video>> getVideosForTier(@PathVariable String tiers) throws IOException {
+        var video = videoOrchestrator.getVideosForTier(tiers);
+        return new ResponseEntity<>(video, HttpStatus.OK);
+    }
+
+    @GetMapping("retrieve-all")
+    public ResponseEntity<List<Video>> getVideoSummaryForAdmin() {
+        var videos = videoOrchestrator.getVideoSummaryForAdmin();
         return new ResponseEntity<>(videos, HttpStatus.OK);
     }
 }

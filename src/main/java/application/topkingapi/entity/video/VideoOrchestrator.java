@@ -32,7 +32,7 @@ public class VideoOrchestrator {
         this.emailSenderService = emailSenderService;
     }
 
-    public void uploadVideoAndNotify(MultipartFile file, String name, String tiers, String method) throws IOException, MessagingException {
+    public void uploadVideoAndNotify(MultipartFile file, String name, String tiers, String method) throws MessagingException, IOException {
         List<String> tiersToSend = constructTiersToSent(tiers);
         uploadVideo(file, name, tiersToSend);
         if (!method.equals("N")) {
@@ -49,12 +49,16 @@ public class VideoOrchestrator {
         videoService.updateVideoName(Long.valueOf(videoId), name);
     }
 
-    public void deleteVideo(Long videoId) {
+    public void deleteVideo(Long videoId) throws IOException {
         videoService.deleteVideo(videoId);
     }
 
-    public List<Video> getVideosForTier(String tiers) {
+    public List<Video> getVideosForTier(String tiers) throws IOException {
         return videoService.getVideosForTier(tiers);
+    }
+
+    public List<Video> getVideoSummaryForAdmin() {
+        return videoService.getVideoSummaryForAdmin();
     }
 
     private List<String> constructTiersToSent(String tiers) {

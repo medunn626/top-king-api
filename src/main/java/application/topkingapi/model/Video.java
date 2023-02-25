@@ -14,18 +14,18 @@ public class Video implements Serializable {
     private String docName;
     private String docType;
     private List<String> productTiersAppliedTo;
-    @Lob
-    private byte[] data;
+    private String driveId;
+    private String driveSourceLink;
 
     public Video(){}
 
     public Video(String docName,
                  String docType,
-                 byte[] data,
+                 String driveId,
                  List<String> productTiersAppliedTo) {
         this.docName = docName;
         this.docType = docType;
-        this.data = data;
+        this.driveId = driveId;
         this.productTiersAppliedTo = productTiersAppliedTo;
     }
 
@@ -53,12 +53,20 @@ public class Video implements Serializable {
         this.docType = docType;
     }
 
-    public byte[] getData() {
-        return this.data;
+    public String getDriveId() {
+        return this.driveId;
     }
 
-    public void setData(byte[] data) {
-        this.data = data;
+    public void setDriveId(String driveId) {
+        this.driveId = driveId;
+    }
+
+    public String getDriveSourceLink() {
+        return this.driveSourceLink;
+    }
+
+    public void setDriveSourceLink(String driveSourceLink) {
+        this.driveSourceLink = driveSourceLink;
     }
 
     public List<String> getProductTiersAppliedTo() {

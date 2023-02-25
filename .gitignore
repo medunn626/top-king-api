@@ -3,6 +3,9 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+src/main/resources/config/application-dev.yml
+/targetFile.tmp
+src/main/resources/keys/client_secret_gd.json
 
 ### STS ###
 .apt_generated
@@ -31,4 +34,3 @@ build/
 
 ### VS Code ###
 .vscode/
-src/main/resources/config/application-dev.yml
