@@ -100,7 +100,7 @@ public class UserOrchestrator {
                 var planLabel = TIER_LABELS.get(productTier);
                 // Send email to TKO saying user needs commission
                 User referrerUserInfo = userService.getUserById(referrer.getAffiliateId());
-                var subject = "Affiliate Account Created!";
+                var subject = "Top King Training - Affiliate Account Created!";
                 var body = "Please pay 20% of the " + planLabel +
                         " plan price to the referrer below. <br/><br/>" +
                         "Name: " + referrerUserInfo.getName() + "<br/>" +
@@ -212,8 +212,24 @@ public class UserOrchestrator {
     }
 
     public void removePlan(Long id) throws Exception {
+        Map<String, String> tierToLabel = Map.of(
+                "1", "Beginner",
+                "2", "Intermediate",
+                "3", "Elite"
+        );
         var userToChange = userService.getUserById(id);
+        var currentProductTier = userToChange.getProductTier();
         userToChange.setProductTier(null);
         userService.updateUser(userToChange);
+
+        // Send email to TKO saying user's plan needs to be cancelled in Stripe
+        var subject = "Top King Training - " + userToChange.getName() + " has removed their " + tierToLabel.get(currentProductTier) + " package";
+        var body = "Please cancel the following Stripe subscription as soon as possible:<br/><br/>" +
+                "Plan to Cancel: " + tierToLabel.get(currentProductTier) + "<br/>" +
+                "Client Name: " + userToChange.getName() + "<br/>" +
+                "Client Email: " + userToChange.getEmail() + "<br/>" +
+                "Client Phone: " + userToChange.getPhoneNumber() + "<br/><br/>" +
+                "It's possible the client has since purchased a new plan. Check for new purchases on Stripe";
+        emailSenderService.sendSimpleEmail(adminEmailAddr, subject, body);
     }
 }
