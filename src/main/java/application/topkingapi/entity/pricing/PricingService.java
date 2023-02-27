@@ -25,7 +25,11 @@ public class PricingService {
     }
 
     public Prices getPrices() {
-        return pricesRepo.findAll().get(0);
+        var prices = pricesRepo.findAll();
+        if (prices.isEmpty()) {
+            return new Prices(30, 50, 75, 100);
+        }
+        return prices.get(0);
     }
 
 }
