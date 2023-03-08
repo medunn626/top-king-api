@@ -18,7 +18,7 @@ public class PricingController {
     }
 
     @PostMapping()
-    public ResponseEntity<Prices> updatePrices(@RequestBody List<Integer> updatedPrices) {
+    public ResponseEntity<Prices> updatePrices(@RequestBody Prices updatedPrices) {
         var prices = pricingService.updatePrices(updatedPrices);
         return new ResponseEntity<>(prices, HttpStatus.OK);
     }
