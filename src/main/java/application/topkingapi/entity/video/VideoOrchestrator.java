@@ -49,6 +49,10 @@ public class VideoOrchestrator {
         videoService.updateVideoName(Long.valueOf(videoId), name);
     }
 
+    public void updateVideos(List<Video> videos) {
+        videoService.updateVideos(videos);
+    }
+
     public void deleteVideo(Long videoId) throws IOException {
         videoService.deleteVideo(videoId);
     }

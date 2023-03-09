@@ -19,7 +19,7 @@ public class VideoController {
         this.videoOrchestrator = videoOrchestrator;
     }
 
-    @PostMapping("/upload/tiers/{tiers}/name/{name}/notify/{method}")
+    @PostMapping("upload/tiers/{tiers}/name/{name}/notify/{method}")
     public void uploadVideo(@RequestBody MultipartFile file,
                             @PathVariable String tiers,
                             @PathVariable String name,
@@ -37,6 +37,11 @@ public class VideoController {
     public void updateVideoName(@PathVariable String videoId,
                                 @PathVariable String name) {
         videoOrchestrator.updateVideoName(videoId, name);
+    }
+
+    @PutMapping("update-order")
+    public void reorderVideos(@RequestBody List<Video> videos) {
+        videoOrchestrator.updateVideos(videos);
     }
 
     @DeleteMapping("delete/id/{videoId}")

@@ -52,6 +52,7 @@ public class VideoService {
         var driveId = saveToDrive(file);
 
         Video videoToSave = new Video(name, docType, driveId, tiers);
+        videoToSave.setOrderNumber(videoRepo.count() + 1);
 
         return videoRepo.save(videoToSave);
     }
@@ -161,6 +162,9 @@ public class VideoService {
         videoRepo.save(existingVideo);
     }
 
+    public void updateVideos(List<Video> videos) {
+        videoRepo.saveAll(videos);
+    }
     private InputStream getJsonSecretData() {
         JSONObject obj = new JSONObject();
         obj.put("type", "service_account");

@@ -11,6 +11,7 @@ public class Video implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, updatable = false)
     private Long id;
+    private Long orderNumber;
     private String docName;
     private String docType;
     private List<String> productTiersAppliedTo;
@@ -75,5 +76,13 @@ public class Video implements Serializable {
 
     public void setProductTiersAppliedTo(List<String> productTiersAppliedTo) {
         this.productTiersAppliedTo = productTiersAppliedTo;
+    }
+
+    public Long getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(Long orderNumber) {
+        this.orderNumber = orderNumber;
     }
 }
