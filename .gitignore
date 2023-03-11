@@ -6,6 +6,7 @@ target/
 src/main/resources/config/application-dev.yml
 /targetFile.tmp
 src/main/resources/keys/client_secret_gd.json
+src/main/resources/keys/backup_client_secret_gd.json
 
 ### STS ###
 .apt_generated

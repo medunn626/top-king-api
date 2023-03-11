@@ -44,7 +44,10 @@ spring:
       mode: always
 
 private_key_id: ${DRIVE_PRIVATE_KEY_ID}
-private_key: ${DRIVE_PRIVATE_KEY}
 client_email: ${DRIVE_CLIENT_EMAIL}
 client_id: ${DRIVE_CLIENT_ID}
+
+backup_private_key_id: ${DRIVE_BACKUP_PRIVATE_KEY_ID}
+backup_client_email: ${DRIVE_BACKUP_CLIENT_EMAIL}
+backup_client_id: ${DRIVE_BACKUP_CLIENT_ID}
 

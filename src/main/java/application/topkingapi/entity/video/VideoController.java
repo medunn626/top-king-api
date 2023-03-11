@@ -23,7 +23,7 @@ public class VideoController {
     public void uploadVideo(@RequestBody MultipartFile file,
                             @PathVariable String tiers,
                             @PathVariable String name,
-                            @PathVariable String method) throws IOException, MessagingException {
+                            @PathVariable String method) throws Exception {
         videoOrchestrator.uploadVideoAndNotify(file, name, tiers, method);
     }
 
